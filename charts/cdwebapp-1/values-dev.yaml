@@ -1,2 +1,2 @@
-replicas: 3
+replicas: 5
 dockerImageTag: "1452ba4"
