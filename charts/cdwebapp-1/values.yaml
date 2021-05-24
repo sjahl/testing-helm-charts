@@ -1,0 +1,11 @@
+favorite:
+  drink: coffee
+  food: pizza
+replicas: 3
+pizzaToppings:
+  - mushrooms
+  - cheese
+  - peppers
+  - onions
+
+dockerImageTag: latest

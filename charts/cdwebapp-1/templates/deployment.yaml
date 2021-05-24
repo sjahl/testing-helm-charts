@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cdwebapp
+spec:
+  replicas: {{ .Values.replicas }}
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: cdwebapp
+  template:
+    metadata:
+      labels:
+        app: cdwebapp
+    spec:
+      imagePullSecrets:
+      - name: docker-hub
+      containers:
+      - name: cdwebapp
+        image: stephenjahl/cdwebapp:{{ .Values.dockerImageTag }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8081
+  # strategy:
+  #   blueGreen: 
+  #     # activeService specifies the service to update with the new template hash at time of promotion.
+  #     # This field is mandatory for the blueGreen update strategy.
+  #     activeService: cdwebapp-service-active
+  #     # previewService specifies the service to update with the new template hash before promotion.
+  #     # This allows the preview stack to be reachable without serving production traffic.
+  #     # This field is optional.
+  #     previewService: cdwebapp-service-preview
+  #     # autoPromotionEnabled disables automated promotion of the new stack by pausing the rollout
+  #     # immediately before the promotion. If omitted, the default behavior is to promote the new
+  #     # stack as soon as the ReplicaSet are completely ready/available.
+  #     # Rollouts can be resumed using: `kubectl argo rollouts promote ROLLOUT`
+  #     autoPromotionEnabled: false
+  #     scaleDownDelaySeconds: 180

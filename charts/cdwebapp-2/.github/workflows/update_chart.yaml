@@ -1,0 +1,35 @@
+name: update-version
+
+on:
+  repository_dispatch:
+    types:
+    - update-chart
+
+jobs:
+  verify-connection:
+    runs-on: ubuntu-latest
+    steps:
+      - name: lima charlie
+        id: echo
+        run: echo ${{ github.event.client_payload.sha8 }}
+      - name: checkout repo
+        uses: actions/checkout@v2
+      - name: Update service version in target file
+        uses: ./.github/actions/yq
+        with:
+          expression: |
+            .dockerImageTag = "${{ github.event.client_payload.sha8 }}"| .dockerImageTag tag = "!!str" | .dockerImageTag style="double"
+          file: ./values-dev.yaml 
+      - name: Create Pull Request
+        id: createpr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.PR_TOKEN }}
+          commit-message: Update docker image tag
+          committer: sjahl <sjahl@broadinstitute.org>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          labels: automation
+      - name: Check outputs
+        run: |
+          echo "Pull Request Number - ${{ steps.createpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.createpr.outputs.pull-request-url }}"
