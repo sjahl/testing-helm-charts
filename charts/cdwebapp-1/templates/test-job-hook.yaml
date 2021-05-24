@@ -12,7 +12,8 @@ spec:
         - name: echo-message
           image: ubuntu:20.04
           command:
-            - "exit"
-            - "1"
+            - "echo"
+            - "-n"
+            - "testing job hooks in argocd!"
         restartPolicy: Never
   backoffLimit: 2
