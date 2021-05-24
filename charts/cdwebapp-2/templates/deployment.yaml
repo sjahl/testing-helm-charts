@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cdwebapp
+  name: cdwebapp-{{ .Release.Name }}
 spec:
   replicas: {{ .Values.replicas }}
   revisionHistoryLimit: 2
